@@ -1,0 +1,211 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<bbsongPro.Models.Order>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <h6 style="color:white;" class="col-12 text-center">
+            Aktive ordre
+            <label class="switch">
+                <input type="checkbox" onclick="SwitchView(@Model.Count)">
+                <span class="slider round"></span>
+            </label>
+            Afleverede ordre
+    </h6>
+
+
+
+    <table class="custom-primary table" style="width:70%;" align="center">
+        <tr>
+            <th>Email</th>
+            <th>Dato</th>
+            <th>OrdreNr</th>
+        </tr>
+
+        <h1 style="color:white;">Ordre</h1>
+
+
+
+        <h6>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var order = Model[i];
+
+                if (order.Completed)
+                {
+                    <tr class="row-hover" style="display:none;" onclick="DisplayOrderDetails('orderComplete' + @i, @order.SongParts.Count)" id="orderComplete@(i)">
+                        <td class="col-6">@order.Email</td>
+                        <td class="col-6">@order.CreationDate</td>
+                        <td class="col-4">@order.Id</td>
+                    </tr>
+
+
+                    <tr style="display:none;" id="orderComplete@(i)comment">
+                        <td class="col-6">
+                            <b>Kommentar</b>
+                            <br />
+                            @order.Comment
+                            <br />
+                            <br />
+                            <b>Lydklip</b>
+                        </td>
+                        <td align="right" class="col-6">
+                        </td>
+                    </tr>
+                    @for (int j = 0; j < order.SongParts.Count; j++)
+                    {
+                        <tr style="display: none;" id="orderComplete@(i)songpart@(j)">
+                            <td class="col-6">
+                                <a href="@order.SongParts[j].Link" target="_blank">Link &nbsp;</a>
+                                From @order.SongParts[j].From
+                                To @order.SongParts[j].To
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+
+
+
+
+
+
+                else
+                {
+                    <tr class="row-hover" onclick="DisplayOrderDetails('order' + @i, @order.SongParts.Count)" id="order@(i)">
+                        <td class="col-6">@order.Email</td>
+                        <td class="col-6">@order.CreationDate</td>
+                        <td class="col-4">@order.Id</td>
+                    </tr>
+
+
+                    <tr style="display:none;" id="order@(i)comment">
+                        <td class="col-6">
+                            <b>Kommentar</b>
+                            <br />
+                            @order.Comment
+                            <br />
+                            <br />
+                            <b>Lydklip</b>
+                        </td>
+                        <td align="right" class="col-6">
+                            <form>
+                                <input class="btn-lg btn-primary" asp-action="UpdateOrder" asp-controller="Admin" asp-route-id="@Model[i].Id"
+                                       type="submit" value="Marker som afleveret">
+                            </form>
+                        </td>
+                    </tr>
+                    @for (int j = 0; j < order.SongParts.Count; j++)
+                    {
+                        <tr style="display: none;" id="order@(i)songpart@(j)">
+                            <td class="col-6">
+                                <a href="@order.SongParts[j].Link" target="_blank">Link &nbsp;</a>
+                                From @order.SongParts[j].From
+                                To @order.SongParts[j].To
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+
+            }
+        </h6>
+    </table>
+
+</body>
+
+</html>
+
+@Html.Hidden("previous_Selected_Order", -1);
+@Html.Hidden("previous_Selected_Order_NumbOfSongparts", -1);
+
+@Html.Hidden("current_View", "active_Orders");
+<script>
+
+    function DisplayOrderDetails(orderId, numbOfSongparts) {
+
+        //close current shown details if any
+        if (GetValue("previous_Selected_Order") != -1)
+            HideOrderDetails(GetValue("previous_Selected_Order"),
+                GetValue("previous_Selected_Order_NumbOfSongparts"));
+
+
+        $("#" + orderId + "comment").show();
+        for (i = 0; i < numbOfSongparts; i++)
+            $("#" + orderId + "songpart" + i).show();
+        document.getElementById(orderId).classList.add("btn-primary");
+
+
+        SetValue("previous_Selected_Order", orderId);
+        SetValue("previous_Selected_Order_NumbOfSongparts", numbOfSongparts);
+    }
+
+    function HideOrderDetails(orderId, numbOfSongparts) {
+        $("#" + orderId + "comment").hide();
+        for (i = 0; i < numbOfSongparts; i++)
+            $("#" + orderId + "songpart" + i).hide();
+            document.getElementById(orderId).classList.remove("btn-primary");
+
+        return;
+    }
+
+
+
+
+    function SwitchView(numbOfRows) {
+
+        var currentState = GetValue("current_View");
+        var showingActiveOrders = (currentState == "active_Orders"); 
+
+        //close current shown details if any
+        if (GetValue("previous_Selected_Order") != -1)
+            HideOrderDetails(GetValue("previous_Selected_Order"),
+                GetValue("previous_Selected_Order_NumbOfSongparts"));
+
+        SetValue("previous_Selected_Order", -1);
+        SetValue("previous_Selected_Order_NumbOfSongparts", -1);
+
+        //hide rows which are currently displayed
+        for (i = 0; i < numbOfRows; i++) {
+            if (showingActiveOrders) {
+                $("#order" + i).hide();
+                $("#orderComplete" + i).show();
+            }
+            else {
+                $("#order" + i).show();
+                $("#orderComplete" + i).hide();
+            }
+        }
+
+        
+        if (showingActiveOrders)
+            SetValue("current_View", "completed_Orders");
+        else
+            SetValue("current_View", "active_Orders");
+    }
+
+
+
+
+
+    function GetValue(id) {
+        return document.getElementById(id).value;
+    }
+
+    function SetValue(id, value){
+        document.getElementById(id).value = value;
+    }
+
+
+
+</script>

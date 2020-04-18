@@ -1,0 +1,199 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<html>
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+</head>
+
+<div class="text-center " style="color:white;">
+    <br />
+    <h4 class="col-7 " style="margin:auto;" align="left">
+        <i class="fa fa-dumbbell fa-xs" style="color:white;"></i>
+        Konstruer og modtag dit eget mix, af lydklip fra
+        <br />&emsp;
+        youtube, som
+        mp3 fil
+        til eget forbrug
+        <br />
+        <br />
+        <i class="fa fa-dumbbell fa-xs" style="color:white;"></i>
+        Så længe linket er fra youtube kan du både vælge
+        <br />&emsp;
+        forskellige tracks samt lyd-effekter
+        til din sang
+        <br />
+        <br />
+        <i class="fa fa-dumbbell fa-xs" style="color:white;"></i>
+        Når du har bygget din sang og trykker "Forsæt
+        <br />&emsp;
+        bestilling" er det muligt at tilføje evt. vigtige
+        <br />&emsp;
+        kommentarer du har til dit mix
+    </h4>
+    <br />
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <button class="btn-lg custom-primary" onclick="AddRow()">
+                    <i class="fa fa-plus" style="        float: left;
+        padding-top: inherit;"></i>
+                    Tilføj link
+                </button>
+            </div>
+        </div>
+        <br />
+        <form asp-action="PersonalInfo">
+            <div class="row">
+                <div class="col-2"> </div>
+                <div class="col-8">
+                    <div class="align-block">
+                        <label class="custom-label" for="Link">link:</label>
+                        <input type="text" name="songParts[0].Link" required />
+                    </div>
+                    <div class="align-block">
+                        <label class="custom-label" for"Fra">fra:</label>
+                        <input type="time" name="songParts[0].From" required />
+                    </div>
+                    <div class="align-block">
+                        <label class="custom-label" for"Til">til:</label>
+                        <input type="time" name="songParts[0].To" required />
+                    </div>
+                    <i class="fa fa-minus-square fa-2x" style="float:right; visibility:hidden;"></i>
+                </div>
+            </div>
+            <br />
+            <div class="row" id="row2">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <div class="align-block">
+                        <label class="custom-label" for="Link">link:</label>
+                        <input type="text" id="link2" name="songParts[1].Link" required />
+                    </div>
+                    <div class="align-block">
+                        <label class="custom-label" for"Fra">fra:</label>
+                        <input type="time" id="fra2" name="songParts[1].From" required />
+                    </div>
+                    <div class="align-block">
+                        <label class="custom-label" for"Til">til:</label>
+                        <input type="time" id="til2" name="songParts[1].To" required />
+                    </div>
+                    <i class="fa fa-minus-square fa-2x " id="deleteBtn2" onclick="RemoveRow(2)" style="float:right; visibility:visible;"></i>
+                </div>
+            </div>
+            <br />
+            @for (int i = 3; i <= 6; i++)
+            {
+
+                <div class="row" id="row@(i)" style="display:none;">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <div class="align-block">
+                            <label class="custom-label" for="Link">link:</label>
+                            <input type="text" id="link@(i)" name="songParts[@(i - 1)].Link" />
+                        </div>
+                        <div class="align-block">
+                            <label class="custom-label" for"Fra">fra:</label>
+                            <input type="time" id="fra@(i)" name="songParts[@(i - 1)].From" />
+                        </div>
+                        <div class="align-block">
+                            <label class="custom-label" for"Til">til:</label>
+                            <input type="time" id="til@(i)" name="songParts[@(i - 1)].To" />
+                        </div>
+                        <i class="fa fa-minus-square fa-2x" id="deleteBtn@(i)" onclick="RemoveRow(@(i))" style="float:right; visibility:hidden;"></i>
+                    </div>
+                </div>
+                <br />
+            }
+
+
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8" style="float:left;">
+                    <input type="submit" class="btn-lg custom-primary" value="Forsæt bestilling" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+<form asp-action="Login" asp-controller="Admin">
+    <input type="submit" value="" class="btn-lg " style="background:transparent; border:none !important;" />
+</form>
+</html>
+
+
+
+
+@Html.Hidden("lowestRowId", 2)
+
+<script script type="text/javascript">
+
+
+
+
+    function AddRow() {
+
+        var currentRowId = parseInt(document.getElementById("lowestRowId").value);
+
+        if (currentRowId <= 5) {
+            var nextRowId = currentRowId + 1;
+
+            //show next row
+            var rowToAdd = "#row" + nextRowId;
+            $(rowToAdd).show();
+            EnableRequiredInput(true, nextRowId);
+
+
+            //update lowestRow value
+            document.getElementById("lowestRowId").value = nextRowId;
+
+            //move delete button down
+            document.getElementById("deleteBtn" + nextRowId).style.visibility = "visible";
+            document.getElementById("deleteBtn" + currentRowId).style.visibility = "hidden";
+
+        }
+    }
+
+
+    function EnableRequiredInput(enable, rowNumb) {
+        document.getElementById("link" + rowNumb).required = enable;
+        document.getElementById("fra" + rowNumb).required = enable;
+        document.getElementById("til" + rowNumb).required = enable;
+    }
+
+
+
+    function RemoveRow(id) {
+
+
+        var linkId = "#link" + id;
+        var fraId = "#fra" + id;
+        var tilId = "#til" + id;
+        var rowId = "#row" + id;
+
+        //clear row data and hide
+        $(linkId).val('');
+        $(fraId).val('');
+        $(tilId).val('');
+        $(rowId).hide();
+
+        EnableRequiredInput(false, id);
+
+        var previousRowId = id - 1;
+        //update lowestrow value
+        document.getElementById("lowestRowId").value = previousRowId;
+
+        //move delete button up
+        document.getElementById("deleteBtn" + previousRowId).style.visibility = "visible";
+    }
+
+</script>
+
+
+

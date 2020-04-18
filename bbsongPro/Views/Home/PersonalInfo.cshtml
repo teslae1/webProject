@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "PersonalInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="white-text">Indtast dine informationer</h1>
+
+
+<div class="text-center" style="color:white;">
+    <br />
+    <br />
+    <h1>
+    </h1>
+            <form asp-action="DisplayOrderCheckout">
+                <h5 align="left">
+                    <label>Email-adresse: </label>
+                    <input type="email" name="email" required />
+                    <a style="color:#999999;">
+                        &emsp;
+                        -Adressen hvor du vil modtage dit ordrenr- samt din mp3 fil på
+                    </a>
+                    <br />
+                    <br />
+                    <label>Kommentarer:</label>
+                    <textarea typeof="text" name="comment" rows="2" cols="19"></textarea>
+                    <a style="color:#999999;">
+                        &emsp;
+                        -Evt. kommentarer til dit mix   
+                    </a>
+                    <br />
+                    <br />
+                </h5>
+                    <input type="submit" class="btn-lg custom-primary" style="margin:auto;" value="Fortsæt bestilling" />
+        </form>
+</div>
+

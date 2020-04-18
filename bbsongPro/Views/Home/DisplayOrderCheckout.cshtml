@@ -1,0 +1,52 @@
+﻿@model bbsongPro.Models.OrderCheckoutModel
+@{
+    ViewData["Title"] = "DisplayOrderCheckout";
+}
+
+    <div class="white-text">
+        <h1>Din bestilling</h1>
+        <h5>
+            <br />
+            <br />
+            @foreach (SongPart part in Model.Order.SongParts)
+            {
+                <div style="background-color:#0d0d0d; word-wrap:normal;">
+                    Link: <a href="@part.Link" target="_blank">@part.Link </a>
+                    <br />
+                    Fra: <a style="color:#999999;">@part.From</a>
+                    <br />
+                    Til: <a style="color:#999999;">@part.To</a>
+                </div>
+                <br />
+                <br />
+            }
+
+            Email: <a style="        color: #999999;
+">@Model.Order.Email</a>
+    <br />
+    <br />
+    Kommentar:
+    <div class="col-4" align="left" style="color:#999999; word-wrap:normal;">@Model.Order.Comment</div>
+    <br />
+    <br />
+    </h5>
+        <div class="text-center">
+    <input type="submit" onclick="RedirectToCheckout()" class="btn-lg custom-primary" value="Fortsæt til betaling" />
+        </div>
+    </div>
+
+
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    function RedirectToCheckout() {
+        var stripe = Stripe('pk_test_zL6fUFZ4EC3Ob7peQwZ1DbGw00U2pSfbx9');
+        stripe.redirectToCheckout({
+            sessionId: '@Model.SessionId'
+        }).then(function (result) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer
+            // using `result.error.message`.
+        });
+    }
+</script>

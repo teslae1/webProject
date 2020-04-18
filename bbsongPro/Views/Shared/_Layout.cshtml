@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - bbsongPro</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @*fontawesome*@
+    <link rel="stylesheet" href="css/font-awesome/css/fontawesome.min.css" />
+    <script src="css/font-awesome/js/all.min.js"></script>
+
+</head>
+<body style="background-color:black;">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 bg-white">
+            <div class="container title-font">
+                <img src="~/lib/custom_Icons/dumbbell.png" width="7%;"/>
+                &nbsp
+                &nbsp
+                <h3 style="flex:auto; font:bold;">
+
+                    Din frirutine sang
+                </h3>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted" >
+        <div class="container" >
+            2020 - bbsongPro - Kontakt: bbsongspro@gmail.com
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
